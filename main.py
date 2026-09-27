@@ -25,13 +25,15 @@ for item in files:
             continue
         print(item.name, '->', destination)
         d_path = p/destination/item.name
+        final_path = None
+        result_message = None
         if d_path.exists():
             print(f'{item.name} already exists in {destination}\n what do you want to do?')
             replace_file = input('Replace existing file? (y/n): ')
             if replace_file == 'y':
                 os.remove(d_path)
-                shutil.move(item, p/destination)
-                print('item replaced')
+                final_path = p/destination
+                result_message = 'item replaced'
             elif replace_file == 'n':
                 rename_file = input('Rename existing file? (y/n): ')
                 if rename_file == 'y':
@@ -42,13 +44,17 @@ for item in files:
                         counter += 1
                         new_name = item.stem + '_'+ str(counter) + item.suffix
                         new_path = p / destination / new_name
-                    shutil.move(item, new_path)
-                    print('Name changed to ' + new_name)
+                    final_path = new_path
+                    result_message = 'Name changed to ' + new_name
                 elif rename_file == 'n':
                     print('file skip')
                     continue
         else:
-            shutil.move(item, p / destination)
+            final_path = p / destination
+        if final_path is not None:
+            shutil.move(item, final_path)
+            if result_message is not None:
+                print(result_message)
 
 #git practice
 # change from conflict branch
